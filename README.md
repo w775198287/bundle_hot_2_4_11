@@ -13,25 +13,27 @@ game远程资源根目录新添加了version.json文件用来版本检查。
 找到构建缓存引擎版本\resources\engine\bin\.cache，删除对应平台构建缓存
 找到文件引擎版本/resources/engine/cocos2d/core/platform/js.js
 找到function setup方法替换如下
+
+```JavaScript
 function setup (key, publicName, table) {
-        js.getset(js, publicName,
-            function () {
-                return Object.assign({}, table);
-            },
-            function (value) {
-                js.clear(table);
-                Object.assign(table, value);
-            }
-        );
-        return function (id, constructor) {
-            // deregister old
-            if (constructor.prototype.hasOwnProperty(key)) {
-                delete table[constructor.prototype[key]];
-            }
-            js.value(constructor.prototype, key, id);
-            // register class
-            if (id) {
-                var registered = table[id];
+    js.getset(js, publicName,
+        function () {
+            return Object.assign({}, table);
+        },
+        function (value) {
+            js.clear(table);
+            Object.assign(table, value);
+        }
+    );
+    return function (id, constructor) {
+        // deregister old
+        if (constructor.prototype.hasOwnProperty(key)) {
+            delete table[constructor.prototype[key]];
+        }
+        js.value(constructor.prototype, key, id);
+        // register class
+        if (id) {
+            var registered = table[id];
 // ---------------------------- 旧逻辑 start ----------------------------
 //                 if (registered && registered !== constructor) {
 //                     var error = 'A Class already exists with the same ' + key + ' : "' + id + '".';
@@ -47,20 +49,21 @@ function setup (key, publicName, table) {
 //                 }
 // ---------------------------- 旧逻辑 end ----------------------------
 // ---------------------------- 新逻辑 start ----------------------------
-                if (registered && registered !== constructor) {
-                    if (key == "__classname__") {
-                        delete _nameToClass[id];
-                    } else if (key == "__cid__") {
-                        delete _idToClass[id];
-                    }
-                    // console.log(`---- cc.js.setup ---- delete ${key} : ${id}`);
+            if (registered && registered !== constructor) {
+                if (key == "__classname__") {
+                    delete _nameToClass[id];
+                } else if (key == "__cid__") {
+                    delete _idToClass[id];
                 }
-                table[id] = constructor;
-// ---------------------------- 新逻辑 end ----------------------------
-                //if (id === "") {
-                //    console.trace("", table === _nameToClass);
-                //}
+                // console.log(`---- cc.js.setup ---- delete ${key} : ${id}`);
             }
-        };
-    }
+            table[id] = constructor;
+// ---------------------------- 新逻辑 end ----------------------------
+            //if (id === "") {
+            //    console.trace("", table === _nameToClass);
+            //}
+        }
+    };
+}
+```
 
