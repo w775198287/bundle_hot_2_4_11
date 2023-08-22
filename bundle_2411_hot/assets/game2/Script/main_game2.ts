@@ -1,15 +1,27 @@
-# bundle_hot_2_4_11
-bundle资源脚本都热更
+const v2 = "001";
 
-# 远程bundle game2
-game2作为远程bundle，用来测试更新远程bundle是否及时的正确生效，以及更新下来是否用的最新的资源和脚本
-game远程资源根目录新添加了version.json文件用来版本检查。
-{
-  "version": "b4ee1"
-}
-加载game2时根据版本来更新game2此bundle的最新文件
+const {ccclass, property} = cc._decorator;
 
-# 更新脚本需要修改引擎部分代码
+@ccclass
+export default class main_game2 extends cc.Component {
+
+    @property(cc.Label)
+    label: cc.Label = null;
+
+    @property
+    text: string = 'hello';
+
+    // LIFE-CYCLE CALLBACKS:
+
+    // onLoad () {}
+
+    start () {
+        this.label.string = "game2 ffffff  "+v2;
+    }
+
+
+/*
+
 找到构建缓存引擎版本\resources\engine\bin\.cache，删除对应平台构建缓存
 找到文件引擎版本/resources/engine/cocos2d/core/platform/js.js
 找到function setup方法替换如下
@@ -64,3 +76,7 @@ function setup (key, publicName, table) {
         };
     }
 
+*/
+
+    // update (dt) {}
+}
